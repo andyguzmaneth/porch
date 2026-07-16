@@ -1,41 +1,36 @@
 # Porch — Milestones
 
-Build order and definitions of done. Phase 0 is due diligence, not code.
+Build order. Each version is independently useful and adds exactly one capability. **Payments are last (V3).**
 
-## Phase 0 — Due diligence (no code)
+## Phase 0 — due diligence (no code)
 
-- **RPCh post-mortem** — the closest prior product (paid private RPC over an incentivized relay) stalled; understand *why* (demand? UX? economics? latency?) before building.
+- **RPCh post-mortem** — the closest prior product (paid private RPC over an incentivized relay) stalled; understand *why* before committing to the **V3** payment layer.
 - **Portal Network post-mortem** — closest decentralized-state substrate; no incentive layer.
-- **Demand validation** — confirm a real consumer (a wallet that already pays for RPC is the strongest signal). Lead with censorship-resistance, not only privacy.
+- **Demand check** — because payments are V3, the demand test happens *inside V0/V1*: will wallets route to Porch nodes for free, on decentralization + censorship-resistance alone? If not, payments never matter.
 
-Gate: a short go/no-go memo.
+## V0 — decentralized serving (free)
 
-## M1 — Walking skeleton
+Central-server registry + node serves the allowlist on a confined port; a wallet points at a node's URL (or the server's list). No payments, no privacy, trust-based correctness.
 
-Node package serves the allowlist on a confined port; sidecar (localhost JSON-RPC) → one node; deposit + a *deterministic* on-chain micro-settle (skip the lottery); no unlinkability yet.
+**Done when:** a wallet pointed at a Porch node gets a correct `eth_getBalance`, and the node self-registers and appears in the directory. *(A runnable toy of exactly this already lives in [`../demo`](../demo).)*
 
-**Done when:** a wallet pointed at the sidecar gets a *paid* `eth_getBalance` end-to-end.
+## V1 — on-chain discovery + correctness
 
-## M2 — Payment rails + vault (privacy-native)
+- On-chain **registry contract**: nodes register (operators pay their own gas); the wallet reads the contract directly to discover. Optional **non-slashable** stake-to-be-featured.
+- **Correctness:** the node returns the answer **+ a Merkle proof** (`eth_getProof`); the **wallet verifies it with its own light client** (Helios / lightspan). Privacy-neutral.
 
-Fixed-denomination deposit + internal balance; batch-voucher (default) and nanopayment tickets with the spent-flag; node redemption; rerandomized commitments so redemption is unlinkable to the deposit.
+**Done when:** a wallet discovers a node via the contract and **rejects a tampered answer** because the Merkle proof fails against its light-client header.
 
-**Done when:** one deposit funds ≥1k calls; only the right settlements land on-chain; a double-redeem bounces; **payments are unlinkable to the deposit** (a definition-of-done from here on).
+## V2 — privacy (Origin + Content)
 
-## M3 — Marketplace
+- **Origin:** anonymizing transport (Tor / mixnet / OHTTP) + byte-identical request canonicalization + reproducible client.
+- **Content:** **PIR** (companion spec) — the node can't see which slot/address you read.
+- **Research:** **verifiable PIR** — proofs that don't reveal the queried index (PIR + correctness together). The key open problem here.
 
-Curated list + ENR capability adverts; sidecar selects a rotating pool of ~3 with health-check/evict; local private reputation; free+paid coexistence; DoS free-probe.
+**Done when:** two users' identical requests are byte-identical on the wire, and a PIR read returns correct data without the node learning the index.
 
-**Done when:** the sidecar survives a pool node dropping mid-session; free and paid nodes interoperate.
+## V3 — payments (last)
 
-## M4 — Origin transport hardening
+Shared vault (fixed-denomination deposit, unlinkable redemption); batch-voucher (default) + nanopayment rails; spent-flag; low governable fee. **Slashing turns on** — client full-RLN (separate bonded) + node signed-head/quorum, **cryptographic proof only, never complaints**.
 
-Payload canonicalization + a reproducible/standard client; anonymizing transport (Tor / mixnet / OHTTP).
-
-**Done when:** two users' identical requests are byte-identical on the wire (payment-unlinkability already gating since M2).
-
-## Later
-
-- **V1 — decentralize discovery:** on-chain permissionless registry; **stake-to-be-featured as a non-slashable** sybil/quality bond; native wallet integration.
-- **V2 — privacy + correctness:** PIR (companion spec, Content privacy); light-client proof-back (Correctness, `eth_getProof`); transaction relay.
-- **V3 — incentive hardening (last):** slashing turns on — **client** full-RLN double-spend (separate bonded) + **node** signed-head/quorum, slashed **only on cryptographic proof, never on user complaints**. Deferred to the very end: slashing only matters once incentives put real value at stake.
+**Done when:** one deposit funds ≥1k calls; only correct settlements land on-chain; a double-redeem bounces; payments are unlinkable to the deposit.

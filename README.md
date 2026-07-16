@@ -13,11 +13,9 @@
 
 > ⚠️ **Experimental.** Early-stage design/RFC — unaudited, unimplemented, and subject to breaking change. Not for production use. Do not rely on anything here.
 
-**Incentivized, privacy-preserving Ethereum reads, served from home nodes.**
+**Decentralized Ethereum reads, served from the nodes people already run at home** — becoming *correct*, then *private*, then *paid*.
 
-Porch is an open protocol for turning the thousands of full nodes people already run at home into a marketplace for **private, paid RPC reads**. A node operator installs Porch, which opens a *separate, confined, paid RPC port*. Nodes advertise what they offer and are discoverable; a wallet — through a small local sidecar — picks a few nodes, asks a read (`eth_getBalance`, `eth_call`, …), pays a tiny fee through a shared privacy-preserving vault, and gets an answer that can't be linked back to it.
-
-The goal: an alternative to trusting one centralized RPC provider that sees every address you look up.
+Porch turns the thousands of full nodes already sitting in people's homes into a directory a wallet can read the chain through — instead of trusting one central RPC provider that sees every address you look up. A node opens a *separate, confined RPC port*, self-registers, and a wallet points at it. That's **V0**: decentralization, redundancy, censorship-resistance. The roadmap then layers on **correctness** (V1), **privacy** (V2), and **payments** (V3) — in that order.
 
 ## Status
 
@@ -25,22 +23,22 @@ The goal: an alternative to trusting one centralized RPC provider that sees ever
 
 ## Why
 
-Most wallets read the chain through a handful of centralized RPC providers. That provider sees the set of addresses you query — which is effectively your identity — and you have to trust the answers it returns. Porch decentralizes the *read path*:
+Most wallets read the chain through a handful of centralized RPC providers. That provider sees the set of addresses you query — effectively your identity — and you must trust the answers it returns. Porch decentralizes the read path, one layer at a time:
 
-- **Private** — payments are unlinkable to your identity and to each other; queries spread across a rotating pool of nodes.
-- **Paid** — a tiny flat fee makes serving reads worth an operator's while, without a token.
-- **Home-served** — every node runs a real Ethereum node; no reselling someone else's RPC.
-- **Correct (roadmap)** — nodes can return light-client proofs so answers verify themselves.
+- **Decentralized & censorship-resistant** — thousands of independent homes answer; no single provider to block or pressure. *(V0)*
+- **Correct** — the node returns a Merkle proof; your wallet verifies it with a light client. *(V1)*
+- **Private** — anonymizing transport + PIR hide *who* is asking and *what*. *(V2)*
+- **Paid** — a tiny fee makes serving worth an operator's while, no token required. *(V3)*
 
-## The three privacy layers
+## The three layers
 
-Porch is explicit about what it protects, so it never claims "private" while a lower layer leaks:
+Porch never claims "private" while a lower layer leaks — and it's honest that **V0 and V1 are not private** (privacy arrives in V2):
 
-| Layer | Question | V0 | Later |
-|-------|----------|-----|-------|
-| **Origin** | *Who* is asking? | payment-unlinkable + pluggable anonymizing transport | — |
-| **Content** | *What* are they asking? | visible to the node (documented) | Private Information Retrieval (PIR) |
-| **Correctness** | Is the answer *true*? | trust + tiny fee + local reputation | light-client proof-back |
+| Layer | Question | Lands in |
+|-------|----------|----------|
+| **Correctness** | Is the answer *true*? | **V1** — node Merkle proof, wallet verifies via light client |
+| **Origin** | *Who* is asking? | **V2** — anonymizing transport (Tor / mixnet / OHTTP) |
+| **Content** | *What* are they asking? | **V2** — PIR |
 
 ## Docs
 
@@ -51,12 +49,13 @@ Porch is explicit about what it protects, so it never claims "private" while a l
 ## Repo layout
 
 ```
-node/       the home-node package (opens the confined paid RPC port)
-sidecar/    local JSON-RPC endpoint a wallet points at (selection + payment + verification)
-contracts/  the shared on-chain payment vault
+demo/       runnable prototype + a conceptual guided-tour mockup of the idea
+node/       the home-node package (confined RPC port; V1+ proofs, V3 payments)
+sidecar/    local JSON-RPC endpoint a wallet points at (discover + verify; V3 payment)
+contracts/  on-chain registry (V1) and payment vault (V3)
 rpc/        OpenRPC profile — the served-method allowlist, a subset of execution-apis
-presets/    every tunable parameter (fee, pool size, denominations, caps)
-tests/      conformance test-vector plan (canonicalization, tickets, vault)
+presets/    every tunable parameter (caps, pool, and V3 fee/denominations)
+tests/      conformance test-vector plan (canonicalization, proofs, vault)
 docs/       spec, decisions, milestones
 ```
 
@@ -66,7 +65,7 @@ Porch follows the discipline of the Ethereum spec repos, scaled to its stage:
 - **Method shapes** are not redefined — [`rpc/`](rpc/) is a *profile* of [execution-apis](https://github.com/ethereum/execution-apis), so a node can be validated with hive's `rpc-compat` for free.
 - **Parameters** live in [`presets/porch.yaml`](presets/porch.yaml), never inline in prose.
 - **Normative requirements** (RFC 2119) are collected in [spec §12](docs/SPEC.md#12-normative-requirements-rfc-2119).
-- **Conformance vectors** for the Porch-specific layers (canonicalization, payment, vault) are planned in [`tests/`](tests/); they'll be generated from the M2 reference implementation (the execution-specs pattern).
+- **Conformance vectors** for the Porch-specific layers (canonicalization, proofs, vault) are planned in [`tests/`](tests/); they'll be generated from the reference implementation when it lands (the execution-specs pattern).
 
 ## License
 

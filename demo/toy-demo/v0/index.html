@@ -123,7 +123,7 @@ const T = {
   reg:['<span class="arw">→ POST registry /register</span>','<span class="ok">✓ registered as alice-porch</span>'],
   incoming:['<span class="arw">← eth_getBalance 0xd8dA…6045</span>'],
   serve:['<span class="mut">▸ serving from local node…</span>','<span class="ok">→ 0x3635c9adc5dea00000</span>',
-         '<span class="mut">✓ served · fee —(V1) · private —(V2)</span>'],
+         '<span class="mut">✓ served · correct —(V1) · private —(V2) · paid —(V3)</span>'],
 };
 const walletQ = '<div class="q"><span class="k">read</span> eth_getBalance(<br>&nbsp;&nbsp;0xd8dA…6045, "latest")</div>';
 const STEPS = [
@@ -141,11 +141,11 @@ const STEPS = [
    term:[...T.boot,...T.reg], reg:['alice','bob'], q:true, ans:'found 2 homes: alice, bob', active:['wallet','registry'], flow:'wallet  →  registry'},
   {n:'Pick a home and ask', d:'It picks a home (in the real thing, a rotating set of ~3) and sends the read straight to it.',
    term:[...T.boot,...T.reg,...T.incoming], reg:['alice','bob'], q:true, ans:'asking alice-porch…', active:['wallet','node'], flow:'wallet  →  alice-porch'},
-  {n:'The home serves the answer', d:'The home answers from its own node and returns the data. Payment (V1) and unlinkability/PIR (V2) wrap this exchange — greyed here because this tour is V0.',
+  {n:'The home serves the answer', d:'The home answers from its own node and returns the data. Correctness (V1), privacy (V2), and payments (V3) layer on top — greyed here because this tour is V0.',
    term:[...T.boot,...T.reg,...T.incoming,...T.serve], reg:['alice','bob'], q:true,
-   ans:'<span class="big">≈ 1,000 ETH</span><div class="srv">served by <b>alice-porch</b> · illustrative</div><div class="chips"><span class="chip">paid — V1</span><span class="chip">unlinkable — V2</span></div>',
+   ans:'<span class="big">≈ 1,000 ETH</span><div class="srv">served by <b>alice-porch</b> · illustrative</div><div class="chips"><span class="chip">correct — V1</span><span class="chip">private — V2</span><span class="chip">paid — V3</span></div>',
    active:['node','wallet'], flow:'alice-porch  →  wallet'},
-  {n:'That is the loop', d:'install → register → discover → serve. Payments come in <b>V1</b>, privacy &amp; correctness proofs in <b>V2</b>. Reminder: this page is a mockup — nothing here is live.',
+  {n:'That is the loop', d:'install → register → discover → serve. Correctness comes in <b>V1</b>, privacy in <b>V2</b>, payments in <b>V3</b>. Reminder: this page is a mockup — nothing here is live.',
    term:[...T.boot,...T.reg,...T.incoming,...T.serve], reg:['alice','bob'], q:true,
    ans:'<span class="big">≈ 1,000 ETH</span><div class="srv">served by <b>alice-porch</b></div>', active:['wallet','registry','node'], flow:''},
 ];
