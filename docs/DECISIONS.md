@@ -31,9 +31,17 @@ The load-bearing choices behind the [spec](SPEC.md), with the rationale in one l
 | 25 | Default payment rail | Batch-voucher default; nanopayment opt-in | Gas-flat, deterministic |
 | 26 | Fee level | Low constant, governable | V0 doesn't fix an earnings regime |
 | 27 | Free-node quality | No special handling — local reputation only | Free and paid equal in selection; reputation sorts them |
+| 28 | Registry gas + entries (V1) | Node operators pay their own registration/update gas; entries self-signed by the node key; capability flags are unverified hints until the node delivers | Permissionless + spam-taxed; clients never pay to discover |
+| 29 | Slashing (V3 — last) | Deferred to the final incentive-hardening phase. Two stakes: **client** double-spend → small **separate RLN bond**, bonded slash (automatic/cryptographic); **node** misbehavior → slashed **only on cryptographic proof** (signed-head mismatch / failed light-client proof), **never on user complaints** (those feed private reputation only) | Slashing only once incentives/value warrant it; stakes may exist earlier as non-slashable bonds |
+| 30 | PIR placement | **Companion spec** (`porch-content`), referenced via the `pir` capability flag + the `eth_getProof` proof hook | Keep core lean; PIR evolves on its own crypto timeline |
 
-## Notable open questions (later versions)
+## Phasing (sequence)
 
-- Who pays gas to update the V1 on-chain registry; supply-chain risk on discovery entries.
-- Slashing severity when full rate-limit-nullifier slashing lands (bonded-portion vs full-deposit).
-- Whether Content privacy (PIR) belongs in this spec or a companion.
+- **V0 (MVP):** trust + minimal spent-flag + local reputation; curated-list/ENR discovery; batch-voucher; read-only. **No stakes, no slashing, no registry contract, no PIR, no proofs.**
+- **V1 (decentralize discovery):** on-chain permissionless registry; stake-to-be-featured as a **non-slashable** sybil/quality bond; native wallet integration.
+- **V2 (privacy + correctness):** PIR (companion) · light-client proof-back (`eth_getProof`) · tx relay.
+- **V3 — Incentive hardening (LAST):** slashing turns on (client RLN + node signed-head/quorum, cryptographic proof only).
+
+## Still open
+
+- Discovery-entry supply-chain hardening details (endpoint-hijack requires signed update; sybil handled by gas + stake).

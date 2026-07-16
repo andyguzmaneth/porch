@@ -91,7 +91,7 @@ A single stateful signer would re-introduce a trusted party and doesn't fit a ro
 ## 7. Threat model & accepted V0 risks
 
 **Accepted (documented, not solved in V0):**
-- **Fake chain head** — a dishonest node can serve a wrong head. This is a real, observed class of attack (malicious custom-RPC scams). Bounded by the tiny fee + local reputation; a signed-head + quorum-slash mechanism is deferred. *Highest residual risk.*
+- **Fake chain head** — a dishonest node can serve a wrong head. This is a real, observed class of attack (malicious custom-RPC scams). Bounded by the tiny fee + local reputation; the signed-head + quorum-slash defense is deferred to **V3** (incentive hardening — nodes are slashed only on cryptographic proof, never on complaints). *Highest residual risk.*
 - **Content visibility** — the node sees the query; the *set of addresses* in a session can re-link it to an on-chain identity even under perfect transport privacy. Partially mitigated by pool rotation + canonicalization; fully addressed only by PIR (later).
 - **Can't prove state was *served*** — "I sent it / I never got it" is unresolvable; loss is bounded to one fee, not prevented.
 
@@ -116,9 +116,11 @@ PIR / Content privacy · light-client proof-back · transaction relay (`eth_send
 - **M2 — payment rails + vault (privacy-native):** fixed-denomination deposit, batch-voucher + nanopayment, spent-flag, **unlinkable-to-deposit is a definition-of-done from here on**.
 - **M3 — marketplace:** discovery, rotating pool with health-check, local reputation, free+paid coexistence, DoS free-probe.
 - **M4 — Origin transport hardening:** payload canonicalization + anonymizing transport.
-- **Later (V1/V2):** on-chain registry, signed-head + quorum slashing, PIR (Content), light-client proof-back (Correctness), transaction relay.
+- **V1 — decentralize discovery:** on-chain permissionless registry; stake-to-be-featured as a **non-slashable** sybil/quality bond; native wallet integration.
+- **V2 — privacy + correctness:** PIR (companion spec), light-client proof-back (Correctness, `eth_getProof`), transaction relay.
+- **V3 — incentive hardening (last):** slashing turns on — client full-RLN (separate bonded) + node signed-head/quorum, **on cryptographic proof only**.
 
-See [MILESTONES.md](MILESTONES.md) for definitions of done.
+Stakes may appear in V1 as non-slashable bonds; slashing (the enforcement layer) is deliberately last, only once real value is at stake. See [MILESTONES.md](MILESTONES.md) for definitions of done.
 
 ## 11. Prior art & reuse
 

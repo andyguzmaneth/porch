@@ -36,5 +36,6 @@ Payload canonicalization + a reproducible/standard client; anonymizing transport
 
 ## Later
 
-- **V1:** on-chain permissionless registry (stake to be featured); signed-head + quorum slashing; full rate-limit-nullifier slashing if leakage bites.
-- **V2:** PIR (Content privacy); light-client proof-back (Correctness); transaction relay.
+- **V1 — decentralize discovery:** on-chain permissionless registry; **stake-to-be-featured as a non-slashable** sybil/quality bond; native wallet integration.
+- **V2 — privacy + correctness:** PIR (companion spec, Content privacy); light-client proof-back (Correctness, `eth_getProof`); transaction relay.
+- **V3 — incentive hardening (last):** slashing turns on — **client** full-RLN double-spend (separate bonded) + **node** signed-head/quorum, slashed **only on cryptographic proof, never on user complaints**. Deferred to the very end: slashing only matters once incentives put real value at stake.
