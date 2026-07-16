@@ -1,0 +1,10 @@
+{
+  "name": "porch-registry",
+  "version": "0.0.0",
+  "private": true,
+  "description": "TOY: in-memory registry for the Porch demo (stands in for the on-chain registry)",
+  "type": "module",
+  "scripts": { "start": "node registry.mjs" },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

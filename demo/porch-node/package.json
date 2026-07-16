@@ -1,0 +1,11 @@
+{
+  "name": "porch-node",
+  "version": "0.0.0",
+  "private": true,
+  "description": "TOY: allowlisted RPC proxy + self-registrar for the Porch demo (not the real Rust node)",
+  "type": "module",
+  "bin": { "porch-node": "./porch-node.mjs" },
+  "scripts": { "start": "node porch-node.mjs" },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

@@ -21,7 +21,7 @@ The goal: an alternative to trusting one centralized RPC provider that sees ever
 
 ## Status
 
-**Early design / RFC.** This repo currently holds the design spec and an empty scaffold for the first milestone (M1). Nothing is implemented yet. Design feedback via issues is very welcome.
+**Early design / RFC.** This repo holds the design spec, the milestone scaffold, and a runnable **[toy demo](demo/)** that shows the core loop — install → self-register → discover → serve a read (no payments, no privacy; illustrative only). The real implementation isn't built yet. Design feedback via issues is very welcome.
 
 ## Why
 
