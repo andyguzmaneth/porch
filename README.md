@@ -4,7 +4,7 @@
 
 # porch
 
-**Private, paid Ethereum reads — served at the door.**
+**P**aid **O**nchain **R**eads. **C**orrect & **H**idden.
 
 ![status](https://img.shields.io/badge/status-experimental-orange) ![license](https://img.shields.io/badge/license-MIT-blue)
 
@@ -13,8 +13,6 @@
 > ⚠️ **Experimental.** Early-stage design/RFC — unaudited, unimplemented, and subject to breaking change. Not for production use. Do not rely on anything here.
 
 **Incentivized, privacy-preserving Ethereum reads, served from home nodes.**
-
-> **P**aid · **O**nchain · **R**eads, · **C**orrect & · **H**idden
 
 Porch is an open protocol for turning the thousands of full nodes people already run at home into a marketplace for **private, paid RPC reads**. A node operator installs Porch, which opens a *separate, confined, paid RPC port*. Nodes advertise what they offer and are discoverable; a wallet — through a small local sidecar — picks a few nodes, asks a read (`eth_getBalance`, `eth_call`, …), pays a tiny fee through a shared privacy-preserving vault, and gets an answer that can't be linked back to it.
 
