@@ -1,41 +1,28 @@
-# demo/ — Porch toy demo
+# demo/
 
-> ⚠️ **Toy / illustrative only.** This is a disposable prototype to *show the idea* and test the loop — **not** the real implementation (that's Rust, serves from a real local node, and has payments/privacy). No money moves here. No privacy guarantees here. Do not run against anything you care about.
+Two different things live here — don't confuse them:
 
-It demonstrates the one thing that makes Porch click: **install → self-register → discover → serve a read.**
+## 1. `toy-demo/` — the conceptual guided tour (the pitch) 🎬
+**Mockup, not runnable.** A click-through, three-panel story (wallet ← registry ← home-node terminal) that *explains the idea*. Everything is simulated — no node, no chain, no money. Versioned `v0/`, `v1/`, `v2/` to mirror the roadmap. Deployable to GitHub Pages / Vercel; also opens by double-clicking `index.html`.
 
-```
-  your node's RPC ──► porch-node (allowlisted proxy) ──► registry ◄── website/client
-                                                          picks a node, reads the chain
-```
+→ [`toy-demo/`](toy-demo/) · start at [`toy-demo/v0/`](toy-demo/v0/)
 
-## Parts
-
-| Folder | What it is |
-|--------|-----------|
-| `porch-node/` | the code an operator runs on their node — a confined, allowlisted RPC port that self-registers |
-| `registry/` | a minimal in-memory registry (`POST /register`, `POST /heartbeat`, `GET /nodes`) — stands in for the eventual on-chain registry |
-| `website/` | a static landing page: the idea, local run steps, a video placeholder, and a **live panel** that reads the chain through a registered node |
-
-## Run it locally (3 terminals, no install)
-
-Needs Node 18+. Zero dependencies.
+## 2. `porch-node/` + `registry/` — runnable prototype code ⚙️
+**Actual code, but a throwaway prototype** (the real node is Rust; this is Node/JS to prove the loop). No payments, no privacy — illustrative. Zero dependencies, Node 18+.
 
 ```bash
-# 1) registry
-node demo/registry/registry.mjs                 # :8700
-
-# 2) a "home node" — wrap ANY Ethereum RPC (your node, or a public one for the demo)
-node demo/porch-node/porch-node.mjs \
-  --rpc https://ethereum-rpc.publicnode.com \
-  --name alice-porch --port 8646
-
-# 3) the website — any static server
-cd demo/website && python3 -m http.server 8080
-# open http://localhost:8080
+# directory
+node registry/registry.mjs                          # :8700
+# a "home node" wrapping any Ethereum RPC
+node porch-node/porch-node.mjs \
+  --rpc https://ethereum-rpc.publicnode.com --name alice-porch --port 8646
+# then query it
+curl -s -X POST http://localhost:8646 \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_chainId"}'
+curl -s http://localhost:8700/nodes
 ```
+Non-allowlisted methods (e.g. `eth_getLogs`) are rejected; the node self-registers and appears in `/nodes`.
 
-Start a **second** `porch-node` on `--port 8647 --name bob-porch` and watch two homes show up in the directory.
-
-## What it deliberately fakes / omits
-Payments, the ZK vault, unlinkability, PIR, proof-back, on-chain registry, slashing, and "runs a real node" (it proxies an upstream RPC). All of that is the real build — see [`../docs/SPEC.md`](../docs/SPEC.md).
+---
+Neither is the real system. Design of record: [`../docs/SPEC.md`](../docs/SPEC.md).
