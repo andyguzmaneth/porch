@@ -1,5 +1,7 @@
 # Porch
 
+> ⚠️ **Experimental.** Early-stage design/RFC — unaudited, unimplemented, and subject to breaking change. Not for production use. Do not rely on anything here.
+
 **Incentivized, privacy-preserving Ethereum reads, served from home nodes.**
 
 > **P**aid · **O**nchain · **R**eads, · **C**orrect & · **H**idden
