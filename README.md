@@ -1,4 +1,14 @@
-# Porch
+<div align="center">
+
+<img src="assets/porch-logo.svg" alt="Porch" width="150" />
+
+# porch
+
+**Private, paid Ethereum reads — served at the door.**
+
+![status](https://img.shields.io/badge/status-experimental-orange) ![license](https://img.shields.io/badge/license-MIT-blue)
+
+</div>
 
 > ⚠️ **Experimental.** Early-stage design/RFC — unaudited, unimplemented, and subject to breaking change. Not for production use. Do not rely on anything here.
 

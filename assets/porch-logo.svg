@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-label="Porch">
+  <title>Porch</title>
+  <!-- roofline / caret: left leg amber, right leg rust, meeting at the peak -->
+  <path d="M30 78 L60 46" stroke="#F2A93B" stroke-width="13" stroke-linecap="round"/>
+  <path d="M60 46 L90 78" stroke="#C15A2B" stroke-width="13" stroke-linecap="round"/>
+</svg>
