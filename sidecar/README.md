@@ -1,14 +1,12 @@
 # sidecar/ — Porch client sidecar
 
-A small local process that exposes an ordinary JSON-RPC endpoint (`http://localhost:…`). A wallet points at it unmodified.
+A small local process exposing an ordinary JSON-RPC endpoint (`http://localhost:…`) a wallet points at unmodified.
 
-Responsibilities:
-- Discover nodes and select a rotating pool (~3), reshuffling periodically.
-- **Canonicalize** each request to a byte-identical form across users (anti-fingerprinting).
-- Attach payment on the node's rail and verify the fee receipt.
-- Verify the response's `(blockNumber, blockHash)` tag against the client's freshness policy.
-- Keep **local, private reputation** and drop misbehaving nodes.
+- **V0:** discover nodes (from the **central registry**), forward allowlisted reads, keep **local, private reputation**, drop bad nodes. Verify the response's `(blockNumber, blockHash)` freshness tag.
+- **V1:** discover via the **on-chain registry**; **verify the node's Merkle proof against a header from its own light client** before trusting an answer.
+- **V2:** **canonicalize** each request to a byte-identical form (anti-fingerprinting) + route over anonymizing transport (Origin privacy).
+- **V3:** attach **payment** on the node's rail and verify the fee receipt.
 
-Designed to also plug into emerging client-side provider interfaces so wallets can adopt Porch natively later, without a sidecar.
+Designed to also plug into emerging client-side provider interfaces so wallets can adopt Porch natively, without a sidecar.
 
-*Not implemented yet — see [../docs/SPEC.md](../docs/SPEC.md) §3, §5.*
+*Not implemented yet — see [../docs/SPEC.md](../docs/SPEC.md).*

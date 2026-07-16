@@ -1,43 +1,44 @@
-# Porch V0 presets — every tunable pulled out of prose.
-# Modeled on ethereum/consensus-specs `presets/` + `configs/`: parameters live here,
-# not inline in the spec. Values marked PLACEHOLDER are not yet pinned.
+# Porch presets — every tunable pulled out of prose, tagged by the version it applies.
+# Modeled on ethereum/consensus-specs `presets/`. Values marked PLACEHOLDER are not yet pinned.
 # Referenced from rpc/porch-profile.openrpc.json via $presets.<path>.
 
 version: 0.0.1
 
-payment:
+selection:            # V0+
+  pool_size: 3
+  reshuffle_calls: 256
+  reshuffle_seconds: 600
+
+rpc:                  # V0+
+  eth_call_gas_cap: 50000000       # PLACEHOLDER gas cap for eth_call / eth_estimateGas
+  fee_history_max_blocks: 128      # PLACEHOLDER bound for eth_feeHistory
+  probe_methods:                   # DoS floor: served free + rate-limited (all versions)
+    - eth_chainId
+    - eth_blockNumber
+  probe_rate_limit_per_min: 60     # PLACEHOLDER per IP/connection
+
+# --- V3 (payments) — none of this exists before V3 ---
+payment:              # V3
   fee_wei: 100000000000        # PLACEHOLDER ~1e-7 ETH per call. Low, governable (decision #26).
   fee_asset: ETH               # decision #12
   default_rail: batch_voucher  # decision #25; nanopayment is opt-in
-  nanopayment_win_probability: 0.000001   # ~1e-6 (NOT 1e-3) so settlements are rare (spec §8). PLACEHOLDER, tune to gas.
+  nanopayment_win_probability: 0.000001   # ~1e-6 so settlements are rare. PLACEHOLDER, tune to gas.
   batch_epoch_seconds: 86400   # PLACEHOLDER: node redeems accumulated vouchers ~once/day
 
-vault:
+vault:                # V3
   chain: ethereum-mainnet      # decision #4
   denominations_wei:           # fixed denominations + unified internal balance (decision #18)
     - 1000000000000000         # PLACEHOLDER 0.001 ETH
     - 10000000000000000        # PLACEHOLDER 0.01 ETH
     - 100000000000000000       # PLACEHOLDER 0.1 ETH
-  credit_ttl_seconds: 2592000  # 30 days; unclaimed -> treasury (decision #22, no withdrawal in V0)
+  credit_ttl_seconds: 2592000  # 30 days; unclaimed -> treasury (decision #22, no withdrawal)
   deposit_min_calls: 10000     # deposit should cover >= this many calls to amortize gas
 
-selection:
-  pool_size: 3                 # decision #9
-  reshuffle_calls: 256         # reshuffle the pool after N calls...
-  reshuffle_seconds: 600       # ...or T seconds, whichever first (bounds a node's view of a session)
-
-rpc:
-  eth_call_gas_cap: 50000000       # PLACEHOLDER gas cap for eth_call / eth_estimateGas
-  fee_history_max_blocks: 128      # PLACEHOLDER bound for eth_feeHistory
-  probe_methods:                   # DoS floor: served free + rate-limited (decision #23)
-    - eth_chainId
-    - eth_blockNumber
-  probe_rate_limit_per_min: 60     # PLACEHOLDER per IP/connection
-
-# Deferred to V1/V2 (documented so their absence is explicit, not forgotten):
+# Deferred to their versions (documented so their absence is explicit, not forgotten):
 deferred:
-  signed_head_quorum: null     # V1: fake-head defense (decision #16 accepted trust in V0)
-  rln_slashing: null           # V1: full key-reveal slashing (V0 uses minimal spent-flag, #20)
-  onchain_registry: null       # V1: permissionless stake-to-feature registry (#7)
-  pir: null                    # V2: Content-layer privacy
-  proof_back: null             # V2: light-client proof-back via eth_getProof
+  onchain_registry: null       # V1: permissionless registry (#7); operators pay their own gas
+  proof_back: null             # V1: node Merkle proof + wallet light-client verify (correctness)
+  origin_transport: null       # V2: anonymizing transport (Tor / mixnet / OHTTP)
+  pir: null                    # V2: Content-layer privacy; verifiable-PIR = open research
+  signed_head_quorum: null     # V3: node fake-head slashing (decision #16 → V3)
+  rln_slashing: null           # V3: full client key-reveal slashing (decision #29)

@@ -1,6 +1,6 @@
 # Porch — Design Decisions
 
-The load-bearing choices behind the [spec](SPEC.md), one line each, **phased across V0–V3** (see Phasing below — it is authoritative). Several rows were first written for a payments-first V0; under the current roadmap **payments are V3 and privacy is V2**, so a decision applies at *its* version. Payment decisions (#1, #4, #5, #18–#26, #29) are **V3**; read-path privacy (#3, #30) is **V2**; correctness (#2, #16) lands in **V1**.
+The load-bearing choices behind the [spec](SPEC.md), one line each, **phased across V0–V3** (see Phasing below — it is authoritative). Several rows were first written for a payments-first V0; under the current roadmap **payments are V3 and privacy is V2**, so a decision applies at *its* version. Payment decisions (#1, #4, #5, #18–#23, #25, #26, #29) are **V3**; read-path privacy (#3, #24, #30) is **V2**; correctness (#2, #16) lands in **V1**.
 
 | # | Decision | Choice | Why |
 |---|----------|--------|-----|
@@ -23,9 +23,9 @@ The load-bearing choices behind the [spec](SPEC.md), one line each, **phased acr
 | 17 | Standard relationship | Companion spec | Plugs into a client-side provider interface; stays independent |
 | 18 | Deposit denomination | Fixed denominations + internal balance | Strong anonymity set + decent UX |
 | 19 | Nanopayment lottery | Adopt an established proof-of-relay construction | No novel crypto risk |
-| 20 | Cross-node solvency | Minimal on-chain spent-flag, lazy detection | No coordinator, no full slashing; bounded economic leakage in V0 |
+| 20 | Cross-node solvency | Minimal on-chain spent-flag, lazy detection | No coordinator, no full slashing; bounded economic leakage (V3) |
 | 21 | Node exposure | Serve freely, eat rare bounced tickets | Loss bounded & tiny |
-| 22 | Withdrawal | None in V0 — use-it-or-expire | Removes withdrawal-proof machinery; small denominations bound waste |
+| 22 | Withdrawal | None (V3) — use-it-or-expire | Removes withdrawal-proof machinery; small denominations bound waste |
 | 23 | DoS floor | Small free probe, then require payment | Probe = fixed tiny method set + rate-limited |
 | 24 | Privacy sequencing | Read-path privacy (Origin+Content) ships together in **V2**; payment-unlinkability in V3 | V0/V1 labeled *not private* |
 | 25 | Default payment rail | Batch-voucher default; nanopayment opt-in | Gas-flat, deterministic |

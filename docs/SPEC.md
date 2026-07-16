@@ -100,7 +100,7 @@ Per-node earnings ≈ `calls_routed_per_day × fee − redemption_gas`. The bind
 
 ## 10. Milestones
 
-See [MILESTONES.md](MILESTONES.md). Summary: **M0/V0** register + serve (a runnable toy exists in [`../demo`](../demo)); **V1** on-chain registry + wallet light-client verification of Merkle proofs; **V2** Origin + Content privacy (+ verifiable-PIR research); **V3** payments + slashing.
+See [MILESTONES.md](MILESTONES.md). Summary: **V0** register + serve (a runnable toy exists in [`../demo`](../demo)); **V1** on-chain registry + wallet light-client verification of Merkle proofs; **V2** Origin + Content privacy (+ verifiable-PIR research); **V3** payments + slashing.
 
 ## 11. Prior art & reuse
 
@@ -129,10 +129,10 @@ Values written `presets.<path>` come from [`presets/porch.yaml`](../presets/porc
 - **C2 (V2).** The client MUST canonicalize each request to the byte-exact form fixed by the canonicalization vectors before it leaves the process.
 - **C3 (all).** The client MUST keep reputation local and private and MUST NOT publish per-client reputation on-chain.
 
-**Vault / payment (V3)**
-- **V1p.** The vault MUST record a spent-flag at redemption and MUST reject a second redemption of the same credit chunk.
-- **V2p.** A deposit MUST use a denomination in `presets.vault.denominations_wei`; payments MUST be unlinkable to the deposit.
-- **V3p.** Slashing MUST fire only on cryptographic proof (double-signal / signed-head mismatch / failed proof), never on user complaints.
+**Vault / payment (all V3)**
+- **PAY-1.** The vault MUST record a spent-flag at redemption and MUST reject a second redemption of the same credit chunk.
+- **PAY-2.** A deposit MUST use a denomination in `presets.vault.denominations_wei`; payments MUST be unlinkable to the deposit.
+- **PAY-3.** Slashing MUST fire only on cryptographic proof (double-signal / signed-head mismatch / failed proof), never on user complaints.
 
 **Privacy**
 - **P1 (all).** An implementation MUST NOT advertise "private" without stating which of Origin / Content / Correctness it provides (§3). V0 and V1 MUST be labeled **not private**.

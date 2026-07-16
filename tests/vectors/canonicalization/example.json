@@ -1,5 +1,5 @@
 {
-  "_comment": "SEED vector to fix the format. Illustrative only — the real canonicalization function (and its generated vectors) land with the M2 reference implementation. It pins the intent: two clients MUST emit byte-identical wire bytes for equivalent requests, so a node cannot fingerprint a caller from request shape.",
+  "_comment": "SEED vector to fix the format. Illustrative only — the real canonicalization function (and its generated vectors) land with the reference implementation (canonicalization is a V2 property). It pins the intent: two clients MUST emit byte-identical wire bytes for equivalent requests, so a node cannot fingerprint a caller from request shape.",
   "title": "eth_getBalance is canonicalized deterministically",
   "rules_applied": [
     "fixed key order: method, params, id, jsonrpc",

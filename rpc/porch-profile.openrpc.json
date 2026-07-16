@@ -3,13 +3,13 @@
   "info": {
     "title": "Porch RPC Profile",
     "version": "0.0.1",
-    "description": "A PROFILE (strict subset) of the Ethereum JSON-RPC API as defined by ethereum/execution-apis. Porch V0 serves only the methods listed here, with the per-method caps in `x-porch`. Method params/results are NOT redefined here: the canonical schema for each method is the one in execution-apis. Verify a Porch node against the allowlisted methods for free with hive's `rpc-compat` suite.",
+    "description": "A PROFILE (strict subset) of the Ethereum JSON-RPC API as defined by ethereum/execution-apis. Porch serves only the methods listed here — FREE in V0-V2; the `paid` tier only takes effect in V3. Per-method caps are in `x-porch`. Method params/results are NOT redefined here: the canonical schema for each method is the one in execution-apis. Verify a Porch node against the allowlisted methods for free with hive's `rpc-compat` suite.",
     "x-porch-source": "https://github.com/ethereum/execution-apis (openrpc.json)",
     "x-porch-note": "This file is normative for WHICH methods Porch serves and their caps. It is NOT normative for method shapes — execution-apis is."
   },
   "x-porch-tiers": {
     "probe": "Served free, unauthenticated, IP/connection rate-limited (DoS floor, spec §7/#23).",
-    "paid": "Requires a valid payment ticket (or, for free-tier nodes, an RLN spam stake)."
+    "paid": "The eventual metered set. Served FREE in V0-V2; only in V3 does it require a valid payment ticket (a free node may still serve without one)."
   },
   "methods": [
     { "name": "eth_chainId",             "x-porch": { "tier": "probe" } },
@@ -28,13 +28,13 @@
     { "name": "eth_getTransactionReceipt","x-porch": { "tier": "paid" } }
   ],
   "x-porch-excluded": {
-    "eth_getLogs": "Unbounded cost with wide ranges — excluded until per-method pricing exists (V2).",
+    "eth_getLogs": "Unbounded cost with wide ranges — excluded until per-method pricing exists (V3).",
     "debug_*": "Excluded.",
     "trace_*": "Excluded.",
     "eth_newFilter/eth_getFilterChanges": "Stateful filters excluded.",
     "eth_subscribe": "Subscriptions excluded."
   },
   "x-porch-reserved": {
-    "eth_getProof": "NOT served in V0. Reserved for the Correctness layer (V2): the node returns a Merkle proof the sidecar verifies against a trusted header. Schema: execution-apis eth_getProof."
+    "eth_getProof": "Reserved for the Correctness layer (V1): the node returns a Merkle proof the wallet verifies against a header from its own light client. Schema: execution-apis eth_getProof."
   }
 }

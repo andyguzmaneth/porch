@@ -86,7 +86,7 @@
     </div>
     <!-- MIDDLE: registry -->
     <div class="col" id="c-registry">
-      <h2>Registry <span class="cap">on-chain (mocked)</span></h2>
+      <h2>Registry <span class="cap">central server (V0)</span></h2>
       <div class="body">
         <table><thead><tr><th>Home</th><th>Endpoint</th><th>Serves</th></tr></thead>
         <tbody id="reg"></tbody></table>
@@ -127,11 +127,11 @@ const T = {
 };
 const walletQ = '<div class="q"><span class="k">read</span> eth_getBalance(<br>&nbsp;&nbsp;0xd8dA…6045, "latest")</div>';
 const STEPS = [
-  {n:'The pieces', d:'Porch turns nodes people already run at home into a marketplace for <b>private, paid reads</b>. Three actors: a <b>home node</b> (right), the <b>registry</b> (middle, a smart contract), and a <b>wallet</b> (left). Click <b>Next</b> to watch the loop.',
+  {n:'The pieces', d:'Porch turns nodes people already run at home into a directory of <b>decentralized reads</b> (privacy and payments come later — V2/V3). Three actors: a <b>home node</b> (right), the <b>registry</b> (middle, a directory server in V0), and a <b>wallet</b> (left). Click <b>Next</b> to watch the loop.',
    term:['<span class="p">$</span> <span class="mut">_</span>'], reg:[], q:false, ans:'idle', active:[], flow:''},
   {n:'A home node boots', d:'Someone runs one command on the box already sitting in their house. It opens a <b>separate, confined</b> RPC port — it does not expose their main node.',
    term:T.boot, reg:[], q:false, ans:'idle', active:['node'], flow:''},
-  {n:'It self-registers', d:'The node announces itself to the registry: its address and what it serves. In the real design this is an on-chain transaction.',
+  {n:'It self-registers', d:'The node announces itself to the registry: its address and what it serves. In V0 that\'s a central directory server; V1 moves it to an on-chain registry contract.',
    term:[...T.boot,...T.reg], reg:['alice'], hi:'alice', q:false, ans:'idle', active:['node','registry'], flow:'home node  →  registry'},
   {n:'More homes join', d:'It is permissionless — anyone can add their home. Now the directory has two nodes; a wallet can spread its reads across them.',
    term:[...T.boot,...T.reg], reg:['alice','bob'], hi:'bob', q:false, ans:'idle', active:['registry'], flow:''},

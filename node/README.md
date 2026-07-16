@@ -1,13 +1,18 @@
 # node/ — Porch home-node package
 
-The package a node operator installs alongside their existing Ethereum node. It opens a **separate, confined, paid RPC port** — it does *not* reconfigure or widen the main node.
+The package a node operator installs beside the Ethereum node already in their house. It opens a **separate, confined RPC port** — it does *not* widen or reconfigure the main node.
 
-Responsibilities:
+**V0 (free serving):**
 - Serve the bounded-cost method allowlist from the real local node.
-- Publish a signed capability descriptor (real-node, payment rails, fee, methods).
-- Accept payment (batch-voucher by default; nanopayment opt-in) and redeem against the vault.
-- Enforce the DoS floor: a small free probe, then require payment.
+- Publish a signed capability descriptor (endpoint, methods, `real_node`).
+- Self-register — **V0: to the central registry server**.
+- DoS floor: a small free probe, then rate-limit. **No payments in V0.**
 
-Intended distribution: as a package for the home-staker node distributions people already run.
+**Later versions:**
+- **V1:** register to the **on-chain registry contract**; return a **Merkle proof** (`eth_getProof`) alongside each answer so the wallet can verify it with its own light client.
+- **V2:** optional PIR serving (Content privacy).
+- **V3:** accept payment (rails, fee) and redeem against the vault.
 
-*Not implemented yet — see [../docs/SPEC.md](../docs/SPEC.md) §3–§6.*
+Intended distribution: a package for the home-staker node distributions people already run.
+
+*Not implemented yet — see [../docs/SPEC.md](../docs/SPEC.md).*
