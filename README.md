@@ -45,8 +45,19 @@ Porch is explicit about what it protects, so it never claims "private" while a l
 node/       the home-node package (opens the confined paid RPC port)
 sidecar/    local JSON-RPC endpoint a wallet points at (selection + payment + verification)
 contracts/  the shared on-chain payment vault
-docs/        spec, decisions, milestones
+rpc/        OpenRPC profile — the served-method allowlist, a subset of execution-apis
+presets/    every tunable parameter (fee, pool size, denominations, caps)
+tests/      conformance test-vector plan (canonicalization, tickets, vault)
+docs/       spec, decisions, milestones
 ```
+
+## Rigor & conformance
+
+Porch follows the discipline of the Ethereum spec repos, scaled to its stage:
+- **Method shapes** are not redefined — [`rpc/`](rpc/) is a *profile* of [execution-apis](https://github.com/ethereum/execution-apis), so a node can be validated with hive's `rpc-compat` for free.
+- **Parameters** live in [`presets/porch.yaml`](presets/porch.yaml), never inline in prose.
+- **Normative requirements** (RFC 2119) are collected in [spec §12](docs/SPEC.md#12-normative-requirements-rfc-2119).
+- **Conformance vectors** for the Porch-specific layers (canonicalization, payment, vault) are planned in [`tests/`](tests/); they'll be generated from the M2 reference implementation (the execution-specs pattern).
 
 ## License
 

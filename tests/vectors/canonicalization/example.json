@@ -1,0 +1,19 @@
+{
+  "_comment": "SEED vector to fix the format. Illustrative only — the real canonicalization function (and its generated vectors) land with the M2 reference implementation. It pins the intent: two clients MUST emit byte-identical wire bytes for equivalent requests, so a node cannot fingerprint a caller from request shape.",
+  "title": "eth_getBalance is canonicalized deterministically",
+  "rules_applied": [
+    "fixed key order: method, params, id, jsonrpc",
+    "addresses lowercased (no EIP-55 mixed case)",
+    "id normalized to a fixed value (1)",
+    "block tag normalized to lowercase",
+    "no insignificant whitespace"
+  ],
+  "input": {
+    "jsonrpc": "2.0",
+    "id": 8571,
+    "method": "eth_getBalance",
+    "params": ["0xAbC0000000000000000000000000000000000001", "Latest"]
+  },
+  "expected_canonical_json": "{\"method\":\"eth_getBalance\",\"params\":[\"0xabc0000000000000000000000000000000000001\",\"latest\"],\"id\":1,\"jsonrpc\":\"2.0\"}",
+  "expected_canonical_sha256": "PLACEHOLDER-computed-by-reference-impl"
+}

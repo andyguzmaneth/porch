@@ -4,6 +4,10 @@
 
 An open protocol for incentivized, privacy-preserving Ethereum reads served by home nodes. This document is an early design RFC — nothing here is implemented yet, and details will change.
 
+### Conventions
+
+The key words **MUST**, **MUST NOT**, **SHOULD**, **SHOULD NOT**, and **MAY** are to be interpreted as in RFC 2119 and RFC 8174. Numbered normative requirements are collected in §12. Tunable parameters live in [`presets/porch.yaml`](../presets/porch.yaml), not inline. The served method set is defined by [`rpc/porch-profile.openrpc.json`](../rpc/porch-profile.openrpc.json) — a profile of [ethereum/execution-apis](https://github.com/ethereum/execution-apis), which remains authoritative for method shapes. Conformance vectors: [`tests/`](../tests/).
+
 ## 0. Summary
 
 A node operator installs the Porch package alongside their existing Ethereum node. It opens a **separate, confined, paid RPC port**, advertises its capabilities, and is discoverable by clients. A wallet — via a local **sidecar** exposing an ordinary JSON-RPC endpoint — selects a small rotating pool of nodes, sends a read query, pays a **tiny flat fee in ETH** through a **shared, privacy-preserving vault on mainnet**, and receives an answer. V0 is **read-only**, **payment-unlinkable**, and deliberately trust-based on data correctness. Content privacy (PIR) and light-client proof-back come later.
@@ -127,6 +131,34 @@ Porch composes existing pieces rather than reinventing them:
 - **PIR** (content privacy, later): recent single-server PIR schemes.
 - **Anonymizing transport** (origin): Tor, Nym, OHTTP.
 - **Probabilistic micropayments**: established proof-of-relay ticket constructions.
+
+## 12. Normative requirements (RFC 2119)
+
+Numbered so implementations and reviews can cite them. Values written `presets.<path>` come from [`presets/porch.yaml`](../presets/porch.yaml).
+
+**Node**
+- **N1.** A node MUST serve only the methods in the [RPC profile](../rpc/porch-profile.openrpc.json) and MUST reject any other method.
+- **N2.** A node MUST run its own execution + consensus node in V0 (`real_node = true`) and MUST NOT proxy an upstream RPC.
+- **N3.** A node MUST expose its paid interface on a separate, confined process/port and MUST NOT widen the main node's exposure.
+- **N4.** A node MUST enforce the per-method caps in `presets.rpc.*` and MAY reject an over-cap call with a standard error.
+- **N5.** Before serving a paid method a node MUST require a valid payment ticket; it MAY serve `presets.rpc.probe_methods` free and rate-limited.
+- **N6.** A node MUST tag each response with the `(blockNumber, blockHash)` it was answered at.
+
+**Client / sidecar**
+- **C1.** The sidecar MUST canonicalize each request to the byte-exact form fixed by the canonicalization vectors before it leaves the process.
+- **C2.** The sidecar MUST spread requests across `presets.selection.pool_size` nodes and MUST reshuffle per `presets.selection.*`.
+- **C3.** The sidecar MUST keep reputation local and private and MUST NOT publish per-client reputation on-chain.
+- **C4.** The sidecar SHOULD verify the response's block tag against its freshness policy.
+
+**Vault / payment**
+- **V1.** The vault MUST record a spent-flag at redemption and MUST reject a second redemption of the same credit chunk.
+- **V2.** A deposit MUST use a denomination in `presets.vault.denominations_wei`.
+- **V3.** V0 MUST NOT expose a withdrawal path; credit unspent past `presets.vault.credit_ttl_seconds` MUST settle to the treasury.
+- **V4.** From M2 onward, payments MUST be unlinkable to the deposit; no release MUST ship a linkable-payment path.
+
+**Privacy**
+- **P1.** An implementation MUST NOT advertise "private" without stating which of Origin / Content / Correctness it provides (§2).
+- **P2.** Clients SHOULD ship a reproducible/standard build so client fingerprints don't deanonymize (§7).
 
 ---
 *Porch is an open design. Feedback and critique via issues welcome.*
