@@ -1,8 +1,9 @@
 <div align="center">
 
-<img src="assets/porch-logo.svg" alt="Porch" width="150" />
-
-# porch
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/porch-lockup-dark.svg">
+  <img alt="porch" src="assets/porch-lockup-light.svg" width="340">
+</picture>
 
 **P**aid **O**nchain **R**eads. **C**orrect & **H**idden.
 
