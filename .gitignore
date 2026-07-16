@@ -1,0 +1,25 @@
+# Rust
+/target
+**/target
+Cargo.lock
+
+# Node / JS
+node_modules/
+dist/
+*.log
+
+# Foundry / contracts
+out/
+cache/
+broadcast/
+
+# env / secrets
+.env
+.env.*
+*.key
+keystore/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
