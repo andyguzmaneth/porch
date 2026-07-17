@@ -22,6 +22,7 @@ const ALLOW = new Set([
   'eth_chainId', 'eth_blockNumber', 'eth_getBalance', 'eth_getTransactionCount', 'eth_getCode',
   'eth_getStorageAt', 'eth_call', 'eth_estimateGas', 'eth_gasPrice', 'eth_feeHistory',
   'eth_getBlockByNumber', 'eth_getBlockByHash', 'eth_getTransactionByHash', 'eth_getTransactionReceipt',
+  'eth_getProof', // V1 correctness: light-client wallets (Helios/Kohaku) verify the Merkle proof
 ]);
 const cors = (res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
