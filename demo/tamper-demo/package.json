@@ -1,0 +1,14 @@
+{
+  "name": "porch-tamper-demo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "V1 correctness demo: a light-client wallet verifies reads through an untrusted porch-node and rejects a lying one",
+  "type": "module",
+  "scripts": {
+    "wallet": "node wallet.mjs"
+  },
+  "dependencies": {
+    "@a16z/helios": "^0.11.1",
+    "@kohaku-eth/provider": "^0.1.0-alpha.8"
+  }
+}

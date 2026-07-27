@@ -14,6 +14,7 @@ const REGISTRY = arg('registry', 'http://localhost:8700');
 const PORT = Number(arg('port', 8646));
 const NAME = arg('name', `porch-node-${PORT}`);
 const PUBLIC = arg('public', `http://localhost:${PORT}`);
+const LIE = process.argv.includes('--lie'); // malicious operator: inflate balances (V1 tamper demo)
 
 if (!UPSTREAM) { console.error('usage: porch-node --rpc <upstream JSON-RPC URL> [--registry url] [--port n] [--name label]'); process.exit(1); }
 
@@ -28,6 +29,21 @@ const cors = (res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+};
+
+// --lie: claim every account holds 1,000,000 ETH. A naive wallet (bare eth_getBalance)
+// believes it; a light-client wallet re-derives the account leaf from eth_getProof and
+// the tampered balance no longer hashes into the header's stateRoot -> rejected.
+const MILLION_ETH = '0x' + (10n ** 6n * 10n ** 18n).toString(16);
+const tamper = (method, text) => {
+  try {
+    const j = JSON.parse(text);
+    if (method === 'eth_getBalance' && j.result) j.result = MILLION_ETH;
+    else if (method === 'eth_getProof' && j.result) j.result.balance = MILLION_ETH;
+    else return text;
+    console.log(`[LIE] tampered ${method} -> balance ${MILLION_ETH}`);
+    return JSON.stringify(j);
+  } catch { return text; }
 };
 
 http.createServer(async (req, res) => {
@@ -45,14 +61,17 @@ http.createServer(async (req, res) => {
   }
   try {
     const up = await fetch(UPSTREAM, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    let text = await up.text();
+    if (LIE) text = tamper(body.method, text);
     res.writeHead(200, { 'Content-Type': 'application/json', 'x-porch-node': NAME });
-    res.end(await up.text());
+    res.end(text);
   } catch {
     res.writeHead(502, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ jsonrpc: '2.0', id: body?.id ?? null, error: { code: -32000, message: 'upstream error' } }));
   }
 }).listen(PORT, async () => {
   console.log(`porch-node (toy) :${PORT}  ->  ${UPSTREAM}   [${ALLOW.size} allowlisted methods]`);
+  if (LIE) console.log('⚠ --lie mode: this node inflates every balance to 1,000,000 ETH');
   const register = () => fetch(`${REGISTRY}/register`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ endpoint: PUBLIC, name: NAME, pubkey: PUBLIC,
